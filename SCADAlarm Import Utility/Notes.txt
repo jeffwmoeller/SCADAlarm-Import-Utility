@@ -1,0 +1,235 @@
+﻿This utility is dependent on 'Access Runtime 2010' which is freely redistributable.
+It can be installed using 'AccessDatabaseEngine.exe' V14.0.6119.5000 from MicroSoft.
+
+A copy of the empty TeleDAC configuration file 'Blank.TeleDAC' V7.13.00.00 is embedded in this utility.
+This allows the utility to be run from any directory without providing a copy of 'Blank.TeleDAC'.
+7.13.00.00 is the current version of 'Blank.TeleDAC'.
+If a newer version of 'Blank.TeleDAC' is released, it may be necessary to modify and/or rebuild this utility.
+
+This utility supports two modes of operation: silent and interactive.
+Silent mode is invoked by specifying a SCADAlarm Configuration Listing file on the command line.
+
+Only Configuration Listing files produced with SCADAlarm V6 will be imported.
+If any other file type is selected (in interactive mode), an error message will be displayed.
+
+This utility creates a file named 'SCADAlarm.mdb' located in a sub-folder named 'Configuration Files'.
+This utility is intended to run from the root folder of a WIN-911 installation, although this is not a requirement.
+
+If a file named 'SCADAlarm.mdb' already exists, it will be overwritten.
+
+The SCADAlarm operator ID is used for both the WIN911 user access code and acknowledge code.
+
+The order of connections for a particular user will be the order that contacts are defined in SCADAlarm.
+SCADAlarm provides a configurable sequence for notifying contacts which is ignored by this utility.
+This sequence is dependent on the schedule in effect at the time that the Configuration Listing file is produced.
+Contacts that are not scheduled  at the time that the Configuration Listing file is produced will not be included 
+in the sequence.
+
+INI settings are not manipulated.  For InTouch Data Sources, the INI [Configurator] section has a key for InTouchPath
+that must be set to the location of the InTouch directory.  The configurator can be used to set this value by
+editing the one and only InTouch Direct Connect Data Source.
+
+Servers provide a channel of communication between a SCADA system and third party
+applications such as WIN-911 and SCADAlarm.
+        
+There are 2 kinds of servers: local and remote.  Local servers communicate via local
+connections.  Remote servers communicate via network connections.
+        
+There are 2 kinds of alarms: local and remote.  Local alarms are implemented by third party
+applications and not by the SCADA system.  Remote alarms are implemented by the SCADA system.
+Remote alarm acknowledgements are not possible for local alarms.
+        
+Data tags allow access to data without alarming considerations.
+        
+SCADAlarm and WIN-911 both support data tags, local alarms, and remote alarms but have
+some fundamental differences.
+
+SCADAlarm summary:
+
+	SCADAlarm supports 
+	
+		local DDE servers
+		remote DDE servers
+		local Galaxy servers
+		remote Galaxy servers
+		local InTouch servers
+		remote InTouch servers
+
+	A SCADAlarm tag with an empty 'Value When On or In Alarm' is a Numeric data tag.
+	Numeric data tags are assumed to contain analog data.
+
+	A SCADAlarm tag with a non-empty 'Value When On or In Alarm' and an unselected 
+	'Alarm Enable' is an OnOff data tag.
+
+	A SCADAlarm tag with a non-empty 'Value When On or In Alarm' and a selected 
+	'Alarm Enable' and an empty 'Name of tag that Acknowledges this alarm' is a local
+	alarm.
+
+	A SCADAlarm tag with a non-empty 'Value When On or In Alarm' and a selected 
+	'Alarm Enable' and a non-empty 'Name of tag that Acknowledges this alarm' is a remote
+	alarm.
+
+	If 'Value When On or In Alarm' contains '0' or '1', it is assumed that tag values will 
+	contain digital data.  
+	
+	If 'Value When On or In Alarm' is numeric but not '0' or '1', it is assumed that tag 
+	values will contain analog data.  
+	
+	If 'Value When On or In Alarm' is not numeric, it is assumed that tag values will contain 
+	text data.
+		
+	SCADAlarm digital tags are defined as data tags that contain digital data.
+		
+	SCADAlarm analog tags are defined as data tags that contain analog data.
+		
+	SCADAlarm text tags are defined as data tags that contain text data.
+		
+	SCADAlarm digital alarms are defined as alarms that contain digital data.
+		
+	SCADAlarm analog alarms are defined as alarms that contain analog data.
+		
+	SCADAlarm text alarms are defined as alarms that contain text data.
+
+	SCADAlarm intouch remote alarms are a special case of remote digital alarms.  These 
+	alarms are further defined by the fact that 'Name of tag that Acknowledges this alarm'
+	ends with '.ack' and 'But write to this tag to Acknowledge' is empty.
+
+	SCADAlarm alarms define a single 'Value When On or In Alarm' modified by an 
+	'anything except' selection.  If 'anything except' is not selected, the alarm is ACTIVE 
+	when the tag value matches the 'Value When On or In Alarm'.  If 'anything except' is 
+	selected, the alarm is ACTIVE when the tag value does not match the  'Value When On or 
+	In Alarm'.  This behavior applies to both local and remote alarms.  For remote alarms, 
+	SCADAlarm defines a 'Name of tag that Acknowledges this alarm' and an optional 'But write 
+	to this tag to Acknowledge'.  If the 'Name of tag that Acknowledges this alarm' is configured 
+	but the 'But write to this tag to Acknowledge' is not configured, the 'Name of tag that 
+	Acknowledges this alarm' is used to both determine the acknowledgement status and to 
+	acknowledge the alarm.  If both the 'Name of tag that Acknowledges this alarm' and the 'But 
+	write to this tag to Acknowledge' are configured, the 'Name of tag that Acknowledges this 
+	alarm' is used to determine the acknowledgement status and the 'But write to this tag to 
+	Acknowledge' is used to acknowledge the alarm.
+
+WIN-911 summary:
+
+	WIN-911 supports: 
+	
+		local DDE servers
+		remote DDE servers
+		local Galaxy servers
+		remote Galaxy servers
+		local InTouch servers
+
+	WIN-911 does not support remote InTouch servers.
+
+	WIN-911 analog tags contain numeric data.  Analog data tags are supported on DDE and InTouch 
+	servers.
+
+	WIN-911 digital tags contain digital data.  Digital tags are supported on DDE and InTouch 
+	servers.
+        
+	WIN-911 text tags contain text data.  Text tags are supported on DDE and InTouch servers.
+        
+	WIN-911 intouch alarms define a base tag.  Tagname extensions for status and acknowledgement 
+	are implied.  Intouch alarms are remote alarms and are supported on local InTouch servers.
+        
+	WIN-911 digital alarms are limited to tag values of 0 or 1.  One of these values is designated 
+	the ACTIVE value and the other the INACTIVE value.  The alarm is ACTIVE when the tag value matches 
+	the ACTIVE value.  The alarm is INACTIVE when the tag value matches the INACTIVE value.  Digital 
+	alarms are local alarms and are supported on DDE and InTouch servers.
+        
+	WIN-911 text alarms are local alarms and define two text strings.  One string is designated 
+	the ACTIVE value and the other string is designated the INACTIVE value.  The alarm is ACTIVE 
+	when the tag value matches the ACTIVE value.  The alarm is INACTIVE when the tag value 
+	matches the INACTIVE value.  All other tag values are ignored.  Text alarms are supported on 
+	DDE and InTouch servers.
+        
+Design considerations:
+
+	Where SCADAlarm remote alarms are mapped to WIN-911 local alarms, remote acknowledgements
+	will be lost.
+        
+	Where SCADAlarm local or remote alarms are mapped to WIN-911 data tags, local and remote 
+	acknowledgements will be lost.
+        
+	For alarms associated with remote InTouch servers, loss of acknowledgement capabilities can
+	be minimized by running a copy of WIN-911 on those remote server nodes.  In this scenario, the
+	SCADAlarm configuration must be prepared before before running the import utility.  There are
+	two methods that can be used for this purpose.  The first method uses the SCADAlarm utility
+	to reconfigure the remote server as a local.  All other InTouch servers should be disabled before 
+	dumping the configuration listing file.  The second method involves editing the dumped
+	configuration listing file.  All other InTouch Data Server definitions and any TAGs associated with 
+	those servers should be deleted.  Replace all occurences of "SuiteLink:\\node\VIEW|TAGNAME"
+	with "SuiteLink:VIEW|TAGNAME" where node is the remote InTouch server node.  With either method,
+	the WIN-911 configuration utility should be used after importing the configuration listing file
+	in order to set the InTouch application path.
+
+	Data tags will be placed in a 'DataTags' group.  The tags in this group can be used in WIN-911 
+	reports or deleted in bulk.
+        
+	WIN-911 has no equivalent to SCADAlarm 'Name of tag that Acknowledges this alarm'.  These
+	tags will be converted to data tags and placed in a 'AckTags' group.  The tags in this group
+	can be used in WIN-911 reports or deleted in bulk.
+
+	Configuration listing files do not contain 'But write to this tag to Acknowledge'.  These tags
+	can not be converted.
+
+	SCADAlarm analog alarms must be converted to WIN-911 analog tags because no INACTIVE 
+	(ACTIVE for 'anything except') tag value can be assumed.
+
+	SCADAlarm text alarms must be converted to WIN-911 text tags because no INACTIVE 
+	(ACTIVE for 'anything except') tag value can be assumed.
+
+	SCADAlarm Galaxy tags and alarms will be ignored
+
+	Certain assumptions have been made which may not be true in all cases.  All imported configurations 
+	should be tested for correct behavior.
+
+	WIN-911 behavior should not be expected to mimic SCADAlarm behavior.  Scheduling has not been 
+	considered, assumptions have been made, and incompatibilities can not be resolved.  The behavior
+	of WIN-911 should be a close approximation to the behavior of SCADAlarm, but adjustments will
+	likely be required.  The imported configuration will serve as a head start for the conversion
+	process.  Retraining of administrators and operators will also be required.
+        
+The following mappings are the result of limitations imposed by WIN-911, SCADAlarm, and by other 
+design considerations.  These mappings cover many corner cases that will rarely be encountered.
+
+SCADAlarm to WIN-911 mappings:
+        
+	SCADAlarm DDE analog tags                      => WIN-911 DDE analog tags
+	SCADAlarm DDE digital tags                     => WIN-911 DDE digital tags
+	SCADAlarm DDE text tags                        => WIN-911 DDE text tags
+
+	SCADAlarm DDE local analog alarms              => WIN-911 DDE analog tags
+	SCADAlarm DDE local digital alarms             => WIN-911 DDE local digital alarms
+	SCADAlarm DDE local text alarms                => WIN-911 DDE text tags
+
+	SCADAlarm DDE remote analog alarms             => WIN-911 DDE analog tags
+	SCADAlarm DDE remote digital alarms            => WIN-911 DDE local digital alarms
+	SCADAlarm DDE remote text alarms               => WIN-911 DDE text tags
+
+	SCADAlarm local InTouch analog tags            => WIN-911 local InTouch analog tags
+	SCADAlarm local InTouch digital tags           => WIN-911 local InTouch digital tags
+	SCADAlarm local InTouch text tags              => WIN-911 local InTouch text tags
+
+	SCADAlarm local InTouch remote intouch alarms  => WIN-911 local InTouch remote intouch alarms
+
+	SCADAlarm local InTouch local analog alarms    => WIN-911 local InTouch analog tags
+	SCADAlarm local InTouch local digital alarms   => WIN-911 local InTouch local digital alarms
+	SCADAlarm local InTouch local text alarms      => WIN-911 local InTouch text tags
+
+	SCADAlarm local InTouch remote analog alarms   => WIN-911 local InTouch analog tags
+	SCADAlarm local InTouch remote digital alarms  => WIN-911 local InTouch local digital alarms
+	SCADAlarm local InTouch remote text alarms     => WIN-911 local InTouch text tags
+
+	SCADAlarm remote InTouch analog tags           => WIN-911 remote DDE analog tags
+	SCADAlarm remote InTouch digital tags          => WIN-911 remote DDE digital tags
+	SCADAlarm remote InTouch text tags             => WIN-911 remote DDE text tags
+
+	SCADAlarm remote InTouch remote intouch alarms => WIN-911 remote DDE local digital alarms
+
+	SCADAlarm remote InTouch local analog alarms   => WIN-911 remote DDE analog tags
+	SCADAlarm remote InTouch local digital alarms  => WIN-911 remote DDE local digital alarms
+	SCADAlarm remote InTouch local text alarms     => WIN-911 remote DDE text tags
+
+	SCADAlarm remote InTouch remote analog alarms  => WIN-911 remote DDE analog tags
+	SCADAlarm remote InTouch remote digital alarms => WIN-911 remote DDE local digital alarms
+	SCADAlarm remote InTouch remote text alarms    => WIN-911 remote DDE text tags

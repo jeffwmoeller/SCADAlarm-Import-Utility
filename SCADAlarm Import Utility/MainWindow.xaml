@@ -1,0 +1,48 @@
+﻿<Window x:Class="SCADAlarm_Import_Utility.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:SCADAlarm_Import_Utility.ViewModel"
+        Title="SCADAlarm Import Utility" Height="350" Width="525">
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="350*"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="SCADAlarm Configuration Listing File:" Margin="8,8,8,0" DockPanel.Dock="Left" />
+                    <Button Content="Browse" Margin="8,8,8,0" HorizontalAlignment="Right" Command="{Binding SelectSCADAlarmFileCommand}" Width="75"/>
+                </StackPanel>
+                <Button Content="Save" Margin="8,8,8,0" HorizontalAlignment="Right" Grid.Column="1" Command="{Binding SaveWIN911FileCommand}" IsEnabled="{Binding SaveEnabled}" Width="75"/>
+            </Grid>
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="4" Margin="8,4" VerticalAlignment="Center" Padding="0,2,0,0">
+                <TextBlock Height="23" Margin="8,0" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Stretch" Text="{Binding SCADAlarmFile}"/>
+            </Border>
+        </StackPanel>
+        <TabControl Grid.Row="2" Margin="8,0,8,8" >
+            <TabItem Header="Operators">
+                <DataGrid ItemsSource="{Binding ScadalarmOperators}" AutoGenerateColumns="True" CanUserAddRows="False" />
+            </TabItem>
+            <TabItem Header="Contacts">
+                <DataGrid ItemsSource="{Binding Contacts}" AutoGenerateColumns="True" CanUserAddRows="False" />
+            </TabItem>
+            <TabItem Header="Groups">
+                <DataGrid ItemsSource="{Binding GroupOperators}" AutoGenerateColumns="True" CanUserAddRows="False" />
+            </TabItem>
+            <TabItem Header="Servers">
+                <DataGrid ItemsSource="{Binding ScadalarmServers}" AutoGenerateColumns="True" CanUserAddRows="False" />
+            </TabItem>
+            <TabItem Header="Tags">
+                <DataGrid ItemsSource="{Binding ScadalarmTags}" AutoGenerateColumns="True" CanUserAddRows="False" />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
